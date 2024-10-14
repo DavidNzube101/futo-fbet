@@ -1,0 +1,220 @@
+body{
+    background: black;
+    margin: 0;
+    padding: 0;
+    color: white;
+    width: 100%;
+    /* height: 100vh; */
+    box-sizing: border-box;
+}
+.screen, .active-screen{
+    margin: 0;
+    padding: 0;
+    color: white;
+    width: 100%;
+    /* height: 100vh; */
+    box-sizing: border-box;
+    display: none;
+    background: url(../media/images/app-background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.active-screen{
+	display: block;
+}
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+}
+.header .title{
+    font-size: 30px;
+    color: rgb(139, 106, 106);
+    color: white;
+    font-weight: 700;
+}
+.header .header-actions {
+    /* border-radius: 10pc; */
+    color: #4f46e5;
+    /* height: 40px; */
+    /* width: 40px; */
+}
+.score-board{
+    padding: 10px;
+    width: 100%;
+    
+    margin: 10px;
+    position: relative;
+}
+.score-board .main{
+    display: flex;
+    border-radius: 20px 20px 0px 0px;
+    align-items: center;
+    background: #ffffff;
+    color: black;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(0.9rem);
+    backdrop-filter: blur();
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px;
+}
+.score-board .is_live{
+    background: rgb(85, 0, 0);
+    background: gray;
+    color: gainsboro;
+    opacity: 1;
+    width: fit-content;
+    top: 0;
+    right: 0;
+    position: absolute;
+    padding: 0px 10px 0px 10px;
+    border-radius: 10pc;
+    /* border-radius: 0px 0px 10px 10px; */
+}
+#match-live{
+    background: rgb(0, 85, 0);
+    /* content: "Live"; */
+    /* content: "Live"; */
+}
+.team{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.matches-category{
+    display: grid;
+    place-items: center;
+    width: 100%;
+}
+.match-tile{
+    background: #ffffff;
+    color: black;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(0.9rem);
+    backdrop-filter: blur();
+    margin: 10px;
+    width: 90%;
+    padding: 10px;
+    border-radius: 20px;
+    width: 90%;
+}
+.match-tile .main{
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.match-tile .match-details-info{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.match-tile .match-details-info span:first-child{
+    color: rgb(4, 167, 4);
+}
+.match-tile .match-details-info span:nth-child(2){
+    font-weight: bolder;
+
+}
+.date-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    margin: 10px;
+}
+.date-bar .back, .date-bar .front{
+    background: black;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(0.9rem);
+    backdrop-filter: blur();
+    padding: 10px;
+    border-radius: 20px;
+    height: 30px;
+    width: 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.date-bar .date{
+    background: #ffffff;
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(0.9rem);
+    backdrop-filter: blur();
+    padding: 10px;
+    border-radius: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    color: black;
+    justify-content: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: black;
+    padding: 10px;
+}
+
+.active{
+    color: #4f46e5;
+}
+.screen-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    background: black;
+    padding: 10px 0px 10px 0px;
+}
+.screen-header .back-button:hover{
+    color: rgb(86, 64, 64);
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.profile-info {
+    text-align: left;
+}
+
+.betting-history {
+    margin-top: 20px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

@@ -1,0 +1,55 @@
+// Step 1: Write your Rust code (lib.rs)
+#[no_mangle]
+pub extern "C" fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// Step 2: Create a C-compatible interface (lib.rs)
+use std::os::raw::c_char;
+use std::ffi::CStr;
+
+#[no_mangle]
+pub extern "C" fn process_string(s: *const c_char) -> *mut c_char {
+    let c_str = unsafe { CStr::from_ptr(s) };
+    let rust_str = c_str.to_str().unwrap();
+    let result = format!("Processed: {}", rust_str);
+    let output = std::ffi::CString::new(result).unwrap();
+    output.into_raw()
+}
+
+# Step 3: Compile Rust to a shared library
+# In your Cargo.toml:
+# [lib]
+# name = "rustlib"
+# crate-type = ["cdylib"]
+
+# Run: cargo build --release
+
+# Step 4: Use ctypes in Python (app.py)
+import ctypes
+from flask import Flask
+
+# Load the shared library
+lib = ctypes.CDLL("./target/release/librustlib.so")  # Adjust path as needed
+
+# Define argument and return types
+lib.add.argtypes = [ctypes.c_int, ctypes.c_int]
+lib.add.restype = ctypes.c_int
+
+lib.process_string.argtypes = [ctypes.c_char_p]
+lib.process_string.restype = ctypes.c_char_p
+
+app = Flask(__name__)
+
+@app.route('/add/<int:a>/<int:b>')
+def add_route(a, b):
+    result = lib.add(a, b)
+    return f"Result: {result}"
+
+@app.route('/process/<string:text>')
+def process_route(text):
+    result = lib.process_string(text.encode('utf-8'))
+    return result.decode('utf-8')
+
+if __name__ == '__main__':
+    app.run(debug=True)

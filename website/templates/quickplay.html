@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Play Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(90deg, #4e54c8, #8f94fb);
+      color: white;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+    }
+    .game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+      text-align: center;
+    }
+    .game-api {
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 60%;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Quick Play Game</h1>
+  </div>
+
+  <div class="game-container">
+    <div class="game-api">
+      <p id="game-data">Fetching game data...</p>
+    </div>
+  </div>
+
+  <script>
+    // Fetch the game data from Flask API
+    function fetchGameData() {
+      fetch('/get_game_data')
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById('game-data').textContent = "Error fetching game data.";
+          } else {
+            // Display game data
+            document.getElementById('game-data').textContent = JSON.stringify(data, null, 2);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('game-data').textContent = "Error fetching game data.";
+        });
+    }
+
+    // Fetch game data when the page loads
+    window.onload = fetchGameData;
+  </script>
+</body>
+</html>

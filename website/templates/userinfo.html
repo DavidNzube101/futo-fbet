@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Info</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #a8c0ff, #3f2b96); /* Gradient background */
+      color: #ffffff; /* White text color */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: #ffffff; /* White background for container */
+      color: #333; /* Dark text color */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #4e54c8; /* Purple header color */
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>User Information</h1>
+    <p>Name: <span id="username">User</span></p>
+    <p>Balance: ₦<span id="balance">0</span></p>
+    <p>Email: <span id="email">user@example.com</span></p>
+  </div>
+
+  <script>
+    fetch('/get_user_info')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('username').textContent = data.username;
+        document.getElementById('balance').textContent = data.balance;
+        document.getElementById('email').textContent = data.email;
+      });
+  </script>
+</body>
+</html>

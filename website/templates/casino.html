@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fbet Casino</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(90deg, #4e54c8, #8f94fb);
+      color: white;
+
+      /* Background Image */
+      background-image: url('./background1.jpg'); /* Path to your image */
+      background-size: cover; /* Cover the entire screen */
+      background-position: center; /* Center the image */
+      background-repeat: no-repeat; /* Prevent the image from repeating */
+      height: 100vh; /* Ensure the body takes the full viewport height */
+      color: white; /* White text color to contrast with the background */
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .games-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px;
+    }
+
+    .game-card {
+      background-color: white;
+      color: black;
+      width: 200px;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.3s;
+      position: relative;
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+
+    .game-name {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .online-status {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: green;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 0.8em;
+    }
+
+    .players-online {
+      font-size: 0.9em;
+      margin-top: 10px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Fbet Casino</h1>
+  </div>
+
+  <div class="games-container">
+    <!-- Aviator Card -->
+    <div class="game-card" onclick="window.location.href='skyflight.html'">
+      <img src="./aviator.jpg" alt="Aviator Game">
+      <div class="game-name">Sky Flight</div>
+      <div class="online-status">Online</div>
+      <div class="players-online" id="aviator-players"></div>
+    </div>
+
+    <!-- Aviator Rush Card -->
+    <div class="game-card" onclick="window.location.href='flightrush.html'">
+      <img src="./aviator_rush.jpg" alt="Aviator Rush Game">
+      <div class="game-name">Flight Rush</div>
+      <div class="online-status">Online</div>
+      <div class="players-online" id="aviator-rush-players"></div>
+    </div>
+
+    <!-- Instant Virtual Card -->
+    <div class="game-card" onclick="window.location.href='quickplay.html'">
+      <img src="./instant-virtual.jpg" alt="Instant Virtual Game">
+      <div class="game-name">Quick Play</div>
+      <div class="online-status">Online</div>
+      <div class="players-online" id="instant-virtual-players"></div>
+    </div>
+
+    <!-- Even or Odd Card -->
+    <div class="game-card" onclick="window.location.href='even-or-odd.html'">
+      <img src="./even_odd.jpg" alt="Even or Odd Game">
+      <div class="game-name">Even or Odd</div>
+      <div class="online-status">Online</div>
+      <div class="players-online" id="even-odd-players"></div>
+    </div>
+
+    <!-- Red or Black Card -->
+    <div class="game-card" onclick="window.location.href='redorblack.html'">
+      <img src="./red-black.jpg" alt="Red or Black Game">
+      <div class="game-name">Red or Black</div>
+      <div class="online-status">Online</div>
+      <div class="players-online" id="red-black-players"></div>
+    </div>
+
+    <!-- More Games Card -->
+    <div class="game-card" onclick="window.location.href='moregames.html'">
+      <img src="./moregames.jpg" alt="More Games">
+      <div class="game-name">More Games</div>
+      <div class="online-status">Online</div>
+      <div class="players-online" id="more-games-players"></div>
+    </div>
+  </div>
+
+  <script>
+    // Generate a random number between 600 and 700
+    document.addEventListener("DOMContentLoaded", function() {
+  // Generate a random number between 600 and 700
+  function getRandomPlayers() {
+    return Math.floor(Math.random() * (700 - 600 + 1)) + 600;
+  }
+
+  // Update the players online count for each game
+  document.getElementById('aviator-players').textContent = `${getRandomPlayers()} players online`;
+  document.getElementById('aviator-rush-players').textContent = `${getRandomPlayers()} players online`;
+  document.getElementById('instant-virtual-players').textContent = `${getRandomPlayers()} players online`;
+  document.getElementById('even-odd-players').textContent = `${getRandomPlayers()} players online`;
+  document.getElementById('red-black-players').textContent = `${getRandomPlayers()} players online`;
+  document.getElementById('more-games-players').textContent = `${getRandomPlayers()} players online`;
+});
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Flight Game</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+        }
+
+        .game-container {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+        }
+
+        #game-area {
+            position: relative;
+            width: 80%;
+            height: 300px;
+            margin: 20px auto;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #plane {
+            width: 50px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            transition: transform 0.1s ease-out;
+        }
+
+        #multiplier {
+            font-size: 2em;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .bet-section {
+            display: inline-block;
+            padding: 10px;
+            background-color: #222;
+            border-radius: 5px;
+        }
+
+        .bet-amount {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .bet-amount input {
+            width: 60px;
+            text-align: center;
+            font-size: 1.2em;
+            padding: 5px;
+            margin-right: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #888;
+            cursor: not-allowed;
+        }
+
+        .bet-options button {
+            padding: 5px 10px;
+            margin: 5px;
+            background-color: #444;
+        }
+
+        button#place-bet {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        button#cash-out {
+            background-color: #f44336;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .leaderboard {
+            margin-top: 30px;
+            background-color: #222;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .leaderboard table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard th, .leaderboard td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .leaderboard th {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Sky Flight Game</h1>
+        <div id="game-area">
+            <div id="plane">✈️</div>
+        </div>
+        <div id="multiplier">1.00x</div>
+        <div class="bet-section">
+            <div class="bet-amount">
+                <input id="bet-input" type="number" value="10.00">
+                NGN
+            </div>
+            <div class="bet-options">
+                <button>100.00</button>
+                <button>200.00</button>
+                <button>500.00</button>
+                <button>1000.00</button>
+            </div>
+        </div>
+        <div class="controls">
+            <button id="place-bet">Place Bet</button>
+            <button id="cash-out" disabled>Cash Out</button>
+        </div>
+
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Multiplier</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <!-- Leaderboard entries will be injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+
+        let multiplier = 1.00;
+        let planePosition = 0;
+        let gameRunning = false;
+        let betPlaced = false;
+        let planeElement = document.getElementById('plane');
+        let multiplierElement = document.getElementById('multiplier');
+        let cashOutButton = document.getElementById('cash-out');
+        let leaderboardBody = document.getElementById('leaderboard-body');
+
+        document.getElementById('place-bet').addEventListener('click', placeBet);
+        document.getElementById('cash-out').addEventListener('click', cashOut);
+
+        // Handle real-time multiplier updates
+        socket.on('update_multiplier', (data) => {
+            multiplier = data.multiplier;
+            planePosition = data.planePosition;
+            multiplierElement.textContent = multiplier.toFixed(2) + 'x';
+            planeElement.style.transform = `translateY(${-planePosition}px`;
+        });
+
+        // Handle game crash
+        socket.on('game_crashed', (data) => {
+            alert('The plane crashed at ' + data.multiplier.toFixed(2) + 'x');
+            cashOutButton.disabled = true;
+            gameRunning = false;
+        });
+
+        // Handle game state when connected
+        socket.on('game_state', (data) => {
+            multiplier = data.multiplier;
+            planePosition = data.planePosition;
+            multiplierElement.textContent = multiplier.toFixed(2) + 'x';
+            planeElement.style.transform = `translateY(${-planePosition}px`;
+            if (data.game_active) {
+                gameRunning = true;
+                cashOutButton.disabled = false;
+            }
+        });
+
+        // Update leaderboard
+        socket.on('update_leaderboard', (leaderboard) => {
+            leaderboardBody.innerHTML = ''; // Clear existing entries
+            leaderboard.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${entry.username}</td><td>${entry.multiplier.toFixed(2)}x</td>`;
+                leaderboardBody.appendChild(row);
+            });
+        });
+
+        function placeBet() {
+            if (!gameRunning) {
+                socket.emit('start_game');
+                betPlaced = true;
+                cashOutButton.disabled = false;
+            }
+        }
+
+        function cashOut() {
+            if (betPlaced && gameRunning) {
+                alert('You cashed out at ' + multiplier.toFixed(2) + 'x');
+                socket.emit('cash_out', { multiplier });
+                cashOutButton.disabled = true;
+                gameRunning = false;
+            }
+        }
+    </script>
+</body>
+</html>

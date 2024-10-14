@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBet</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard-style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="{{ url_for('static', filename='media/icons/fbet-removebg-preview.png') }}">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        body{
+            font-family: "Space Grotesk", sans-serif;
+            font-optical-sizing: auto;
+            /* font-weight: <weight>; */
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='media/icons/fbet-removebg-preview.png') }}" alt="FBet Icons" style="height: 30px; width: 30px;">
+        </div>
+        <div class="title">
+            FBet
+        </div>
+        <div class="header-actions" onclick="loadScreen('4')">
+            Help
+        </div>
+    </div>
+
+    <main class="screen active-screen" id="home-screen" style="background: url(../static/media/images/app-background-2\ \(2\).png);">
+        <div class="body">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; overflow-y: hidden; overflow-x: auto;">
+                <div class="score-board">
+                    <div class="main">
+                        <div class="team home">
+                            <!-- <img src="" alt=""> -->
+                            <h1>1</h1>
+                            <p>Team 1</p>
+                        </div>
+                        <div>
+                            <p align="center">vs</p>
+                            <small>Fresher Cup - Quarter Finals</small>
+                        </div>
+                        <div class="team away">
+                            <!-- <img src="" alt=""> -->
+                            <h1>2</h1>
+                            <p>Team 2</p>
+                        </div>
+                    </div>
+                    <!-- <div class="is_live" id="match-live">
+                        <p align="center">Live</p>
+                    </div> -->
+                    <div class="is_live" id="match-not-live">
+                        <p align="center">Live</p>
+                    </div>
+                </div>
+
+                <div class="score-board">
+                    <div class="main">
+                        <div class="team home">
+                            <!-- <img src="" alt=""> -->
+                            <h1>1</h1>
+                            <p>Team 1</p>
+                        </div>
+                        <div>
+                            <p align="center">vs</p>
+                            <small>Fresher Cup - Quarter Finals</small>
+                        </div>
+                        <div class="team away">
+                            <!-- <img src="" alt=""> -->
+                            <h1>2</h1>
+                            <p>Team 2</p>
+                        </div>
+                    </div>
+                    <!-- <div class="is_live" id="match-live">
+                        <p align="center">Live</p>
+                    </div> -->
+                    <div class="is_live" id="match-not-live">
+                        <p align="center">Live</p>
+                    </div>
+                </div>
+
+                <div class="score-board">
+                    <div class="main">
+                        <div class="team home">
+                            <!-- <img src="" alt=""> -->
+                            <h1>1</h1>
+                            <p>Team 1</p>
+                        </div>
+                        <div>
+                            <p align="center">vs</p>
+                            <small>Fresher Cup - Quarter Finals</small>
+                        </div>
+                        <div class="team away">
+                            <!-- <img src="" alt=""> -->
+                            <h1>2</h1>
+                            <p>Team 2</p>
+                        </div>
+                    </div>
+                    <!-- <div class="is_live" id="match-live">
+                        <p align="center">Live</p>
+                    </div> -->
+                    <div class="is_live" id="match-not-live">
+                        <p align="center">Live</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="matches-category">
+                <h2 align="center">Other matches</h2>
+                {% for match in live_recent_matches %}
+                    <div class="match-tile">
+                        <div class="match-details-info">
+                            <span>{{ match.start_time if match.already_played != "yes" else "Ended" }}</span>
+                            <span>{{ match.title }}</span>
+                        </div>
+                        <div class="main">
+                            <div class="teams">
+                                <p>{{ match.team1 }}</p>
+                                <p>{{ match.team2 }}</p>
+                            </div>
+                            <div class="scores">
+                                <p>{{ match.team1_score }}</p>
+                                <p>{{ match.team2_score }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+    
+                <!-- Upcoming -->
+                <h2>Upcoming</h2>
+                <div class="date-bar">
+                    <div class="back" onclick="changeDate(-1)">←</div>
+                    <div class="date" id="current-date">12th May, 2024</div>
+                    <div class="front" onclick="changeDate(1)">→</div>
+                </div>
+                <div class="match-tile" id="upcoming-matches">
+                    <div class="match-details-info">
+                        <span>45:00</span>
+                        <span>Freshers Cup - Quarter Finals</span>
+                    </div>
+                    <div class="main">
+                        <div class="teams">
+                            <p>Team 4</p>
+                            <p>Team 5</p>
+                        </div>
+                        <div class="scores">
+                            <p>1</p>
+                            <p>2</p>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    let currentIndex = 0;
+                    const upcomingDates = {{ upcoming_matches.keys() | list | tojson }};
+                    const upcomingMatches = {{ upcoming_matches | tojson }};
+
+                    function updateUpcomingMatches() {
+                        const currentDate = upcomingDates[currentIndex];
+                        document.getElementById('current-date').textContent = currentDate;
+                        
+                        const matchesContainer = document.getElementById('upcoming-matches');
+                        matchesContainer.innerHTML = '';
+                        
+                        if (upcomingMatches[currentDate] && upcomingMatches[currentDate].length > 0) {
+                            upcomingMatches[currentDate].forEach(match => {
+                                const matchHtml = `
+                                    <div class="match-tile">
+                                        <div class="match-details-info">
+                                            ${match.start_time} ${match.title}
+                                        </div>
+                                        <div class="main">
+                                            <div class="teams">
+                                                ${match.team1}<br>
+                                                ${match.team2}
+                                            </div>
+                                            <div class="scores">
+                                                ${match.team1_score}<br>
+                                                ${match.team2_score}
+                                            </div>
+                                        </div>
+                                        <button onclick="showMatchDetails('${match.match_id}')">More</button>
+                                    </div>
+                                `;
+                                matchesContainer.innerHTML += matchHtml;
+                            });
+                        } else {
+                            matchesContainer.innerHTML = '<p>No matches scheduled for this date.</p>';
+                        }
+                    }
+
+                    function changeDate(direction) {
+                        currentIndex += direction;
+                        if (currentIndex < 0) currentIndex = upcomingDates.length - 1;
+                        if (currentIndex >= upcomingDates.length) currentIndex = 0;
+                        updateUpcomingMatches();
+                    }
+
+                    // Initialize the upcoming matches display
+                    updateUpcomingMatches();
+                </script>
+            </div>
+        </div>
+    
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+    </main>
+
+    <main class="screen" id="bet-screen">
+        <div class="screen-header">
+            <div class="back-button" onclick="loadScreen('1')">
+                ←
+            </div>
+            <div class="title">
+                Bet
+            </div>
+            <div class="other-actions" onclick="loadScreen('4')">
+                &nbsp;
+            </div>
+        </div>
+        <section style="height: 100vh; display: flex; align-items: center; justify-content: center; width: 100%;">
+            <div style="display: grid; place-items: center;">
+                <img src="{{ url_for('static', filename='media/images/icons8-gambling-100.png') }}" alt="gambling icon" >
+                <p>Gamblimg coming soon</p>
+            </div>
+        </section>
+    </main>
+    <main class="screen" id="account-screen" style="background: #4f46e5;">
+        <div class="screen-header">
+            <div class="back-button" onclick="loadScreen('1')">
+                ←
+            </div>
+            <div class="title">
+                Account
+            </div>
+            <div class="other-actions" onclick="loadScreen('4')">
+                &nbsp;
+            </div>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-image">
+                <img src="https://img.icons8.com/?size=100&id=UwAh6su01bil&format=png&color=000000" alt="Profile Image">
+            </div>
+            <div class="profile-info">
+                <h2>{{ CUser['username'] }}</h2>
+                <p>Email: {{ CUser['email'] }}</p>
+                <p>Balance: {{ CUser['wallet_balance'] }}</p>
+                <button>Deposit</button>
+                <button>Withdraw</button>
+            </div>
+        </div>
+
+        <div class="betting-history">
+            <h2>Betting History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>Bet Amount</th>
+                        <th>Outcome</th>
+                        <th>Winnings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </main>
+    <main class="screen" id="help-screen">h</main>
+    <main class="screen" id="deposit-screen">
+        <div class="screen-header">
+            <div class="back-button" onclick="loadScreen('1')">
+                ←
+            </div>
+            <div class="title">
+                Deposit
+            </div>
+            <div class="other-actions" onclick="loadScreen('4')">
+                &nbsp;
+            </div>
+        </div>
+        <input type="number" placeholder="Deposit Amount" id="deposit-amount" class="widget-input">
+        <button class="widget-button">Deposit</button>
+    </main>
+    <main class="screen" id="withdraw-screen"></main>
+
+    <nav>
+        <div class="tab nav-tab active active-tab" id="home-tab" onclick="loadScreen('1')">Home</div>
+        <div class="tab nav-tab" id="bet-tab" onclick="loadScreen('2')">Bet</div>
+        <div class="tab nav-tab" id="account-tab" onclick="loadScreen('3')">Account</div>
+    </nav>
+<!-- <script src="{{ url_for('static', filename='js/AutoReload.js') }}"></script> -->
+<script>
+    current_screen = 1
+</script>
+<script src=" {{ url_for('static', filename='js/Screen_Manager.js') }} "></script>
+</body>
+</html>

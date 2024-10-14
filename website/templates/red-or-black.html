@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red or Black Game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(90deg, #f953c6, #b91d73);
+      color: white;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+    }
+    .game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 40px); /* Adjusted for header padding */
+      text-align: center;
+    }
+    .game-frame {
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 80%; /* Adjust width as needed */
+      max-width: 800px; /* Limit width for larger screens */
+      height: 450px; /* Fixed height for game frame */
+      overflow: hidden; /* Hide overflow content */
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Red or Black Game</h1>
+  </div>
+  
+  <div class="game-container">
+    <iframe class="game-frame" id="game-frame" src="about:blank"></iframe>
+  </div>
+
+  <script>
+    async function loadGame() {
+      try {
+        const response = await fetch('/api/game');
+        const data = await response.json();
+        document.getElementById('game-frame').src = data.game_url;
+      } catch (error) {
+        console.error('Error loading game:', error);
+      }
+    }
+
+    loadGame();
+  </script>
+</body>
+</html>

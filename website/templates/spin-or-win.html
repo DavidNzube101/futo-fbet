@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fbet Spin and Win</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(45deg, #1f4037, #99f2c8);
+      color: white;
+      text-align: left;
+      overflow: hidden;
+    }
+    .header {
+      padding: 50px;
+    }
+    .wheel-container {
+      position: relative;
+      width: 40vw; /* Adjust width to fit within 412px */
+      height: 80vw; /* Keep aspect ratio */
+      max-width: 230px; /* Limit max-width for smaller screens */
+      max-height: 200px; /* Limit max-height for smaller screens */
+      margin: 20px auto; /* Center the wheel */
+    }
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #fff;
+      position: relative;
+      border: 8px solid #333;
+      overflow: hidden;
+      transform: rotate(0deg);
+      transition: transform 2s cubic-bezier(0.4, 2.3, 0.3, 1);
+    }
+    .wheel-content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-weight: bold;
+      font-size: 0.8em; /* Adjust font size for better readability */
+      color: #333;
+    }
+    .wheel-content div {
+      width: 50%;
+      height: 25%;
+      line-height: 1.2em;
+      border: 1px solid #333;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0a500;
+    }
+    .wheel-content div:nth-child(odd) {
+      background-color: #fdbb2d;
+    }
+    .wheel-content div:nth-child(even) {
+      background-color: #ff9a00;
+    }
+    .spin-button {
+      background-color: #ff9966;
+      color: white;
+      padding: 8px 16px;
+      font-size: 0.9em; /* Adjust font size for smaller screens */
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .spin-button:hover {
+      background-color: #ff5e62;
+    }
+    .result {
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+    .pointer {
+      position: absolute;
+      top: -10px; /* Adjusted position */
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 15px solid red;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Spin & Win</h1>
+    <p>Cost: 250 Diamonds per spin</p>
+  </div>
+
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div id="wheel" class="wheel">
+      <div class="wheel-content">
+        <div>0 NAIRA</div>
+        <div>0 NAIRA</div>
+        <div>0 NAIRA</div>
+        <div>0 NAIRA</div>
+        <div>20 NAIRA</div>
+        <div>100 NAIRA</div>
+        <div>200 NAIRA</div>
+        <div>500 NAIRA</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="spin-button" id="spin-btn">Spin the Wheel</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    const wheel = document.getElementById('wheel');
+    const result = document.getElementById('result');
+    const spinButton = document.getElementById('spin-btn');
+    const prizes = ['0 NAIRA', '0 NAIRA', '0 NAIRA', '0 NAIRA', '20 NAIRA', '100 NAIRA', '200 NAIRA', '500 NAIRA'];
+    let isSpinning = false;
+
+    spinButton.addEventListener('click', function() {
+      if (isSpinning) return;
+      isSpinning = true;
+      result.textContent = '';  // Clear the result text
+
+      // Rigged random logic: 70% chance of landing on 0 NAIRA
+      const riggedProbability = Math.random();
+      let prizeIndex;
+
+      if (riggedProbability <= 0.70) {
+        // Force it to land on one of the 0 NAIRA segments
+        prizeIndex = Math.floor(Math.random() * 4); // This selects from the first 4 zero NAIRA options
+      } else {
+        // Land on one of the non-zero prizes
+        prizeIndex = 4 + Math.floor(Math.random() * 4); // This selects from the last 4 non-zero prizes
+      }
+
+      const randomDegree = 360 * 5 + prizeIndex * 45; // Rotate at least 5 full rotations + segment degrees
+      wheel.style.transform = `rotate(${randomDegree}deg)`;  // Apply the spin
+
+      // Simulate the spin duration and show result
+      setTimeout(() => {
+        result.textContent = `You won ${prizes[prizeIndex]}!`;
+        isSpinning = false;
+
+        // Send result to the backend (this part is a placeholder, you'll need backend to handle this)
+        fetch('/spin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prize: prizes[prizeIndex] })
+        }).then(response => response.json())
+          .then(data => {
+            console.log('Backend response:', data);
+          }).catch(error => {
+            console.error('Error sending spin result to backend:', error);
+          });
+      }, 2000);  // Spin duration is 2 seconds
+    });
+  </script>
+</body>
+</html>

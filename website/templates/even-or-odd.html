@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Even or Odd Game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(90deg, #ff5e62, #ff9966);
+      color: white;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+    }
+    .game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 40px); /* Adjusted for header padding */
+      text-align: center;
+    }
+    .game-frame {
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 800px;
+      height: 450px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Even or Odd Game</h1>
+  </div>
+  
+  <div class="game-container">
+    <iframe id="game-frame" class="game-frame" src="about:blank"></iframe>
+  </div>
+
+  <script>
+    // Fetch game data from Flask and load into iframe
+    function loadGame() {
+      fetch('/get_game_data')
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById('game-frame').src = "about:blank";
+            alert("Error loading game data.");
+          } else {
+            document.getElementById('game-frame').src = data.game_url;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("Error loading game data.");
+        });
+    }
+
+    // Call the loadGame function when the page loads
+    window.onload = loadGame;
+  </script>
+</body>
+</html>

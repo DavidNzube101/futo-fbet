@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fbet Matches</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('./background17.jpg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+
+    /* Darker and Blurrier background using pseudo-element */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+      filter: blur(8px); /* Blur effect */
+      z-index: 0;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px;
+      background-color: #2b2e38;
+      font-size: 1.8em;
+      font-weight: bold;
+      position: relative;
+      z-index: 1; /* Ensure content is above the background */
+    }
+
+    .matches-container {
+      padding: 20px;
+      margin: 0 auto;
+      max-width: 800px;
+      text-align: left;
+      position: relative;
+      z-index: 1; /* Ensure content is above the background */
+    }
+
+    .section-title {
+      font-size: 1.5em;
+      color: #e5e5e5;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #e5e5e5;
+    }
+
+    .matches-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .match, .score {
+      background-color: #ffffff;
+      color: #333333;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.2em;
+    }
+
+    .match span, .score span {
+      font-weight: bold;
+    }
+
+    .live-scores {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .matches-container {
+        padding: 10px;
+      }
+
+      .match, .score {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    Fbet Matches
+  </div>
+
+  <div class="matches-container">
+    <!-- Current Matches Section -->
+    <div class="section-title">Today's Matches</div>
+    <ul id="current-matches" class="matches-list">
+      <li class="match"><span>Team A</span> vs <span>Team B</span> at 5:00 PM</li>
+      <li class="match"><span>Team C</span> vs <span>Team D</span> at 8:00 PM</li>
+    </ul>
+
+    <!-- Upcoming Matches Section -->
+    <div class="section-title">Upcoming Matches</div>
+    <ul id="upcoming-matches" class="matches-list">
+      <li class="match"><span>Team E</span> vs <span>Team F</span> tomorrow at 6:00 PM</li>
+      <li class="match"><span>Team G</span> vs <span>Team H</span> in 2 days at 9:00 PM</li>
+    </ul>
+
+    <!-- Live Scores Section -->
+    <div class="section-title">Live Scores</div>
+    <div id="live-scores" class="live-scores">
+      <div class="score"><span>Team A</span>: 1 - <span>Team B</span>: 0</div>
+      <div class="score"><span>Team C</span>: 2 - <span>Team D</span>: 1</div>
+    </div>
+  </div>
+
+  <script>
+    // Example data fetching for matches and live scores
+    fetch('/matches')
+      .then(response => response.json())
+      .then(data => {
+        // Update current matches
+        const currentMatches = document.getElementById('current-matches');
+        data.current_matches.forEach(match => {
+          const li = document.createElement('li');
+          li.className = 'match';
+          li.innerHTML = `<span>${match.team1}</span> vs <span>${match.team2}</span> at ${match.time}`;
+          currentMatches.appendChild(li);
+        });
+
+        // Update upcoming matches
+        const upcomingMatches = document.getElementById('upcoming-matches');
+        data.upcoming_matches.forEach(match => {
+          const li = document.createElement('li');
+          li.className = 'match';
+          li.innerHTML = `<span>${match.team1}</span> vs <span>${match.team2}</span> on ${match.date} at ${match.time}`;
+          upcomingMatches.appendChild(li);
+        });
+
+        // Update live scores
+        const liveScores = document.getElementById('live-scores');
+        data.live_scores.forEach(score => {
+          const div = document.createElement('div');
+          div.className = 'score';
+          div.innerHTML = `<span>${score.team1}</span>: ${score.score1} - <span>${score.team2}</span>: ${score.score2}`;
+          liveScores.appendChild(div);
+        });
+      });
+  </script>
+</body>
+</html>
